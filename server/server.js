@@ -18,7 +18,11 @@ app.use(express.static(publicPath));
 
 app.post('/validate', (req, res) => {
   console.log(req);
+  var accessId = req.query.GWSAccessKeyId;
+  var mac = req.query.macAddress;
+  var org = req.query.organization;
   var ticket = req.query.ticket;
+  var direction = req.query.direction;
   console.log(`validating ${ticket}`);
 
   if(ticket.length % 2 == 0 ){
