@@ -17,7 +17,7 @@ var app = express();
 app.use(express.static(publicPath));
 
 app.post('/validate', (req, res) => {
-  console.log(req.query);
+  console.log(req);
   var ticket = req.query.ticket;
   console.log(`validating ${ticket}`);
 
