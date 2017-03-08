@@ -16,6 +16,25 @@ var app = express();
 
 app.use(express.static(publicPath));
 
+app.post('/validate', (req, res) => {
+  console.log(req.query);
+  var ticket = req.query.ticket;
+  console.log(`validating ${ticket}`);
+
+  if(ticket.length % 2 == 0 ){
+    res.send({
+      'result': 'valid',
+      'message': 'Node Granted!'
+    });
+  } else {
+    res.send({
+      'result': 'invalid',
+      'message': 'Node Denied!'
+    });
+  }
+
+});
+
 app.listen(port, function() {
   console.log(`Server is up on ${port}`);
 });
