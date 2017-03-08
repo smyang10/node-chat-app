@@ -17,26 +17,10 @@ var app = express();
 app.use(express.static(publicPath));
 
 app.post('/validate', (req, res) => {
-  console.log(req);
-  var accessId = req.query.GWSAccessKeyId;
-  var mac = req.query.macAddress;
-  var org = req.query.organization;
-  var ticket = req.query.ticket;
-  var direction = req.query.direction;
-  console.log(`validating ${ticket}`);
-
-  if(ticket.length % 2 == 0 ){
-    res.send({
-      'result': 'valid',
-      'message': 'Node Granted!'
-    });
-  } else {
-    res.send({
-      'result': 'invalid',
-      'message': 'Node Denied!'
-    });
-  }
-
+  res.send({
+    'result': 'valid',
+    'message': 'Node Granted!'
+  });
 });
 
 app.listen(port, function() {
