@@ -22,18 +22,12 @@ app.use(bodyParser.json());
 io.on('connection', (socket) => {
   console.log('new user connected');
 
-  socket.emit('newMessage', {
-    from: 'john',
-    text: 'blap city yo',
-    createdAt: 123
-  });
-
   socket.on('createMessage', (message) => {
     console.log(message);
-    socket.emit('newMessage', {
+    io.emit('newMessage', {
       from: message.from,
       text: message.text,
-      createdAt: 123
+      createdAt: new Date().getTime()
     });
   });
 
