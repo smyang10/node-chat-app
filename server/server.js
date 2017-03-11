@@ -22,6 +22,30 @@ app.use(bodyParser.json());
 io.on('connection', (socket) => {
   console.log('new user connected');
 
+  socket.emit('newMessage', {
+    from: 'john',
+    text: 'blap city yo',
+    createdAt: 123
+  });
+
+  socket.on('createMessage', (message) => {
+    console.log(message);
+    socket.emit('newMessage', {
+      from: message.from,
+      text: message.text,
+      createdAt: 123
+    });
+  });
+
+  // socket.emit('newEmail', {
+  //   from: 'mike@example.com',
+  //   text: 'thanks for vibing it and keeping it tight',
+  //   createdAt: 123
+  // });
+  //
+  // socket.on('createEmail', (newEmail) => {
+  //   console.log('create email', newEmail);
+  // });
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });
