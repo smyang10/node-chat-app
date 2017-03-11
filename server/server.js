@@ -4,6 +4,7 @@ const publicPath = path.join(__dirname, '../public');
 const configPath = path.join(__dirname, '../config');
 const express = require('express');
 const socketIO = require('socket.io');
+const {generateMessage} = require('./utils/message');
 
 const hbs = require('hbs');
 const bodyParser = require('body-parser');
@@ -23,25 +24,13 @@ io.on('connection', (socket) => {
   console.log('new user connected');
 
   // socket.emit from admin 'welcome to chat app'
-  socket.emit('newMessage', {
-    from: 'Admin',
-    text: 'Welcome to the chat app!',
-    createdAt: new Date().getTime()
-  });
+  socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app!'));
   // socket.broadcast.emit from admin 'new user joined'
-  socket.broadcast.emit('newMessage', {
-    from: 'Admin',
-    text: 'New user joined!',
-    createdAt: new Date().getTime()
-  })
+  socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined!'));
 
   socket.on('createMessage', (message) => {
     console.log(message);
-    io.emit('newMessage', {
-      from: message.from,
-      text: message.text,
-      createdAt: new Date().getTime()
-    });
+    io.emit('newMessage', generateMessage(message.from, message.text));
 
     // socket.broadcast.emit('newMessage', {
     //   from: message.from,
@@ -62,11 +51,7 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('user disconnected');
 
-    socket.broadcast.emit('newMessage', {
-      from: 'Admin',
-      text: 'User disconnected',
-      createdAt: new Date().getTime()
-    })
+    socket.broadcast.emit('newMessage', generateMessage('Admin', 'User disconnected!'));
   });
 });
 
