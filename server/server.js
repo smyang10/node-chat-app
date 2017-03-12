@@ -28,26 +28,12 @@ io.on('connection', (socket) => {
   // socket.broadcast.emit from admin 'new user joined'
   socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined!'));
 
-  socket.on('createMessage', (message) => {
+  socket.on('createMessage', (message, callback) => {
     console.log(message);
     io.emit('newMessage', generateMessage(message.from, message.text));
-
-    // socket.broadcast.emit('newMessage', {
-    //   from: message.from,
-    //   text: message.text,
-    //   createdAt: new Date().getTime()
-    // });
+    callback('blap');
   });
 
-  // socket.emit('newEmail', {
-  //   from: 'mike@example.com',
-  //   text: 'thanks for vibing it and keeping it tight',
-  //   createdAt: 123
-  // });
-  //
-  // socket.on('createEmail', (newEmail) => {
-  //   console.log('create email', newEmail);
-  // });
   socket.on('disconnect', () => {
     console.log('user disconnected');
 
