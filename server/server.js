@@ -4,7 +4,7 @@ const publicPath = path.join(__dirname, '../public');
 const configPath = path.join(__dirname, '../config');
 const express = require('express');
 const socketIO = require('socket.io');
-const {generateMessage} = require('./utils/message');
+const {generateMessage, generateLocationMessage} = require('./utils/message');
 
 const hbs = require('hbs');
 const bodyParser = require('body-parser');
@@ -32,6 +32,11 @@ io.on('connection', (socket) => {
     console.log(message);
     io.emit('newMessage', generateMessage(message.from, message.text));
     callback('blap');
+  });
+
+  socket.on('createLocationMessage', (coords) => {
+    io.emit('newLocationMessage',
+      generateLocationMessage('Admin', coords.latitude, coords.longitude));
   });
 
   socket.on('disconnect', () => {
