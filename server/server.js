@@ -5,6 +5,7 @@ const configPath = path.join(__dirname, '../config');
 const express = require('express');
 const socketIO = require('socket.io');
 const {generateMessage, generateLocationMessage} = require('./utils/message');
+const {isRealString} = require('./utils/validation');
 
 const hbs = require('hbs');
 const bodyParser = require('body-parser');
@@ -23,11 +24,22 @@ app.use(bodyParser.json());
 io.on('connection', (socket) => {
   console.log('new user connected');
 
-  // socket.emit from admin 'welcome to chat app'
-  socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app!'));
-  // socket.broadcast.emit from admin 'new user joined'
-  socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined!'));
+  socket.on('join', (params, callback) => {
+    if(!(isRealString(params.name) && isRealString(params.room))){
+      callback('Name and room name are required!');
+    }
 
+    socket.join(params.room);
+
+    // socket.emit from admin 'welcome to chat app'
+    socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app!'));
+    // socket.broadcast.emit from admin 'new user joined'
+    socket.broadcast.to(params.room).emit('newMessage',
+      generateMessage('Admin', `${params.name} has joined.`));
+
+
+    callback();
+  });
   socket.on('createMessage', (message, callback) => {
     console.log(message);
     io.emit('newMessage', generateMessage(message.from, message.text));
